@@ -1,0 +1,61 @@
+# Python cache va compiled fayllar
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual environment
+.venv/
+venv/
+ENV/
+env/
+
+# OS fayllar
+.DS_Store
+Thumbs.db
+
+# IDE konfiguratsiyalari
+.idea/
+.vscode/
+*.iml
+
+# Env fayllar (tokenlar, parollar)
+.env
+*.env
+
+# Log va cache fayllar
+*.log
+*.pot
+*.pyc
+*.pkl
+
+# Test natijalari
+.coverage
+.tox/
+.pytest_cache/
+htmlcov/
+
+# Build fayllar
+build/
+dist/
+*.egg-info/
+
+# Local fayllar
+*.sqlite3
+*.db
+*.db-journal
+
+# Media yoki maxfiy fayllar
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.mp4
+*.mp3
+*.zip
+*.tar.gz
+
+# Aiogram yoki boshqa frameworkdan vaqtinchalik fayllar
+*.session
+*.session-journal
