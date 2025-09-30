@@ -15,7 +15,7 @@ dp = Dispatcher()
 
 
 async def main():
-    bot = Bot(token="8478373957:AAEy3T65Qo-CGNmnPIY4N9BCgflFEv-OzDA")
+    bot = Bot(token=str(env('TOKEN')))
     try:
         basicConfig(level=INFO)
         dp.include_router(user_router)

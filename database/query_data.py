@@ -55,3 +55,17 @@ def insert_query(chat_id, name, phone, username, location):
             user = cursor.fetchone()
             connect.commit()
             return user
+
+def check_user(chat_id):
+    check_sql = """
+    select * from users where chat_id = %s;
+    """
+    with get_connect() as connect:
+        with connect.cursor() as cursor:
+            cursor.execute(check_sql, (chat_id,))
+            user = cursor.fetchone()
+            connect.commit()
+            if user:
+                return True
+            else:
+                return False

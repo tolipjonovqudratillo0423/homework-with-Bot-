@@ -4,8 +4,8 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.filters import CommandStart
 from environs import Env
-from pops import REG_text,register_kb,share_phone_kb,location_share_kb
-from database import get_connect, create_important_table, insert_query
+from details import REG_text,register_kb,share_phone_kb,location_share_kb,continue_button,GET_NAME_TEXT,GET_LOCATION_TEXT,GET_PHONE_TEXT
+from database import get_connect, create_important_table, insert_query,check_user
 env = Env()
 env.read_env()
 
@@ -25,17 +25,21 @@ async def start(message: Message ):
     await message.answer(REG_text,reply_markup=register_kb)
 
 
-@user_router.message(F.text == "Register")
+@user_router.message(F.text == "📝 Register")
+
 async def register(message:Message, state: FSMContext):
-    await state.set_state(Reg_point.name)
-    await message.answer("Enter your name")
-    await state.update_data(chat_id=message.from_user.id)
+    if check_user(message.from_user.id):
+        await message.answer("You have already registered.")
+    else:
+        await state.set_state(Reg_point.name)
+        await message.answer(GET_NAME_TEXT)
+        await state.update_data(chat_id=message.from_user.id)
 
 
     
 @user_router.message(Reg_point.name)
 async def command_name(message: Message, state: FSMContext):
-    await message.answer("Please share your phone number", reply_markup=share_phone_kb)
+    await message.answer(GET_PHONE_TEXT, reply_markup=share_phone_kb)
     await state.update_data(name=message.text)
     await state.set_state(Reg_point.phone)
 
@@ -48,21 +52,22 @@ async def command_phone(message: Message, state: FSMContext):
         phone = message.text
     await state.update_data(phone=phone)
     await state.set_state(Reg_point.username)
-    await message.answer("Enter your username", reply_markup=ReplyKeyboardRemove())
-
-
-
+    await message.answer(
+        "👍 Phone number saved!\n\n"
+        "Now I will automatically use your Telegram username.\n"
+        "➡️ Press any key or just continue...",
+    reply_markup=continue_button)
 
 @user_router.message(Reg_point.username)
 async def command_username(message: Message, state: FSMContext):
     try:
         username = message.from_user.username
     except:
-        username = message.text
+        pass
 
     await state.update_data(username=username)
     await state.set_state(Reg_point.location)
-    await message.answer("Enter your location", reply_markup=location_share_kb)
+    await message.answer(GET_LOCATION_TEXT, reply_markup=location_share_kb)
 
 
 
@@ -74,13 +79,20 @@ async def command_location(message: Message, state: FSMContext):
         location = message.text
     await state.update_data(location=location)
     data = await state.get_data()
-    await message.answer(f"Registration completed!\n\n"
-                         f"Chat ID: {data['chat_id']}\n"
-                         f"Name: {data['name']}\n"
-                         f"Phone: {data['phone']}\n"
-                         f"Username: {data['username']}\n"
+    
+    
+    await message.answer(
+            f"✅ *Registration completed!*\n\n"
+            f"🆔 Chat ID: `{data['chat_id']}`\n"
+            f"👤 Name: {data['name']}\n"
+            f"📱 Phone: {data['phone']}\n"
+            f"📛 Username: @{data['username']}\n"
+            f"📍 Location: {data['location']}",
+            parse_mode="Markdown",
+            reply_markup=ReplyKeyboardRemove()
+        )
 
-                         f"Location: {data['location']}\n", reply_markup=ReplyKeyboardRemove())
+        
     get_connect()
     create_important_table()
     insert_query(data['chat_id'],data['name'],data['phone'],data['username'],data['location'])
