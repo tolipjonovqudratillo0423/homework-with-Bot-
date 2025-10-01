@@ -1,4 +1,4 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton   
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
 
 register_kb = ReplyKeyboardMarkup(
     keyboard=[
@@ -84,5 +84,13 @@ search_kb = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True,
     one_time_keyboard=True
+)
+#Order Buttonelri 
+order_inb = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text="➖",callback_data="decreacse"),InlineKeyboardButton(text="❌",callback_data="cancel"),InlineKeyboardButton(text="➕",callback_data="add")],
+        [InlineKeyboardButton(text="❌",callback_data="broke"),InlineKeyboardButton(text="✅",callback_data="confirm")]
+    ],
+    
 )
 

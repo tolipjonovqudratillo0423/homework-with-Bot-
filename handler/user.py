@@ -60,6 +60,13 @@ async def contact_handler(message:Message):
 @user_router.message(F.text == "📝 Order")
 async def contact_handler(message:Message):
     await message.answer(CONNACT_US_BT,reply_markup=order_kb)
+    
+@user_router.message(F.text == "🛒 Ordered Books")
+async def contact_handler(message:Message):
+    await message.answer(CONNACT_US_BT,reply_markup=order_inb)
+
+
+
 
 
 
