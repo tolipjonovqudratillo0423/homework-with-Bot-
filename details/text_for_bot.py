@@ -45,10 +45,44 @@ GET_NAME_TEXT = (
 
 GET_PHONE_TEXT = (
     "📱 Please send us your phone number.\n\n"
-    "Example: +998 90 123 45 67"
+    "Example: +998901234567"
 )
 
 
 GET_LOCATION_TEXT = (
     "📍 Please share your location."
 )
+MENU_TEXT = (
+    "📋 *Main Menu*\n\n"
+    "📚 *Books* — browse our collection and discover new titles\n"
+    "👤 *Profile* — view and edit your account information\n"
+    "☎️ *Contact* — get in touch with our support team\n\n"
+    "👉 Choose an option below:"
+)
+CONNACT_US_BT= """
+📞 Contact Us
+
+Agar sizda savollar, takliflar yoki muammolar bo‘lsa, biz bilan bog‘lanishingiz mumkin:
+
+📧 Email: tolipjonovqudratillo0423@gmail.com
+📱 Telefon: +998 91 325-00-17
+💬 Telegram: @qudratillo0017
+
+Biz Sizga Xizmatishga Mavnunmiz ! """
+USERNAME_CHANGE = """
+✏️ Yangi username kiriting:
+
+👉 Username faqat lotin harflari, raqamlar va pastki chiziq (_) bilan yozilishi kerak.
+Masalan: qudratjon_01
+"""
+PROFILE = '''
+
+    "⚙️ Profil bo‘limi:\n\n"
+    "Bu yerda siz quyidagilarni o‘zgartirishingiz mumkin:\n"
+    "✏️ Username\n"
+    "📍 Manzil (location)\n"
+    "📞 Telefon raqam\n"
+    "👤 About Me (o‘zingiz haqingizda ma’lumot)\n\n"
+    "Kerakli tugmani tanlang 👇"
+
+'''

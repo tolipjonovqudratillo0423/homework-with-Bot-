@@ -18,6 +18,7 @@ def create_important_table():
     create table if not exists books(
         id bigserial primary key,
         title varchar(100) not null unique,
+        genre varchar(255) not null ,
         author varchar(100) not null,
         description text,
         quantity integer default 1,
@@ -65,7 +66,48 @@ def check_user(chat_id):
             cursor.execute(check_sql, (chat_id,))
             user = cursor.fetchone()
             connect.commit()
+
             if user:
                 return True
             else:
                 return False
+def get_user_data(chat_id):
+    check_sql = """
+    select name , phone , username , location from users where chat_id = %s;
+    """
+    with get_connect() as connect:
+        with connect.cursor() as cursor:
+            cursor.execute(check_sql, (chat_id,))
+            user = cursor.fetchall()
+            connect.commit()
+            return user
+def search_by_title(title):
+    search_sql="""
+    select * from books where title ilike '%%s%' """
+    with get_connect() as connect:
+        with connect.cursor() as cursor :
+            cursor.execute(search_sql,(title))
+            books = cursor.fetchall()
+            connect.commit()
+            return books 
+def search_by_genre(genre):
+    search_sql="""
+    select * from books where genre ilike '%%s%'"""
+    with get_connect() as connect:
+        with connect.cursor() as cursor :
+            cursor.execute(search_sql,(genre))
+            books = cursor.fetchall()
+            connect.commit()
+            return books
+def search_by_author(author):
+    search_sql="""
+    select * from books where author ilike '%%s%' """
+    with get_connect() as connect:
+        with connect.cursor() as cursor :
+            cursor.execute(search_sql,(author))
+            books = cursor.fetchall()
+            connect.commit()
+            return books
+
+
+

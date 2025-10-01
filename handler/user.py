@@ -1,108 +1,65 @@
-from aiogram import Bot , Router, F
-from aiogram.types import Message, ReplyKeyboardRemove
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import StatesGroup, State
-from aiogram.filters import CommandStart
+from aiogram import Router, F
+from aiogram.types import Message
+from details import *
+from database import *
 from environs import Env
-from details import REG_text,register_kb,share_phone_kb,location_share_kb,continue_button,GET_NAME_TEXT,GET_LOCATION_TEXT,GET_PHONE_TEXT
-from database import get_connect, create_important_table, insert_query,check_user
 env = Env()
-env.read_env()
+env.read_env()  
 
 user_router = Router()
-class Reg_point(StatesGroup):
-    chat_id = State()
-    name = State()
-    phone = State()
-    username = State()
-    location = State()
+#Contact uchun kerak 
+@user_router.message(F.text == "📞 Contact")
+async def contact_handler(message:Message):
+    await message.answer(CONNACT_US_BT,reply_markup=back_kb)
+#Back da endi 
+@user_router.message(F.text == "↩️ Back")
+async def contact_handler(message:Message):
+    await message.answer(MENU_TEXT,reply_markup=menu_kb)\
     
+#book uchun kerak
+@user_router.message(F.text == "📚 Books")
+async def contact_handler(message:Message):
+    await message.answer(CONNACT_US_BT,reply_markup=books_kb)
+@user_router.message(F.text == "🔎 Search")
+async def contact_handler(message:Message):
+    await message.answer(CONNACT_US_BT,reply_markup=search_kb)
 
+#Profile Uchun Kerak
+@user_router.message(F.text == "👤 Profile")
+async def contact_handler(message:Message):
+    await message.answer(PROFILE,reply_markup=profile_kb)
+#username Almashtirish
+@user_router.message(F.text == "✏️ Change username")
+async def contact_handler(message:Message):
+    await message.answer(USERNAME_CHANGE,reply_markup=profile_kb)
 
-@user_router.message(CommandStart())
-async def start(message: Message ):
+#About Me Ishlaydi 
+@user_router.message(F.text == "👤 About Me")
+async def contact_handler(message:Message):
+    for i in get_user_data(message.from_user.id):
+        result = {
+            "name":i[0],
+            "phone":i[1],
+            "username":i[2],
+            "location":i[3]
+
+        }
     
-    await message.answer(REG_text,reply_markup=register_kb)
+    text = (
+    f"👤 Ism: {result['name']}\n"
+    f"📞 Nomer: {result['phone']}\n"
+    f"🔗 Username: @{result['username']}\n"
+    f"📍 Joylashuv: {result['location']}"
+)
 
 
-@user_router.message(F.text == "📝 Register")
-
-async def register(message:Message, state: FSMContext):
-    if check_user(message.from_user.id):
-        await message.answer("You have already registered.")
-    else:
-        await state.set_state(Reg_point.name)
-        await message.answer(GET_NAME_TEXT)
-        await state.update_data(chat_id=message.from_user.id)
+    await message.answer(text,reply_markup=profile_kb)
 
 
-    
-@user_router.message(Reg_point.name)
-async def command_name(message: Message, state: FSMContext):
-    await message.answer(GET_PHONE_TEXT, reply_markup=share_phone_kb)
-    await state.update_data(name=message.text)
-    await state.set_state(Reg_point.phone)
-
-        
-@user_router.message(Reg_point.phone)
-async def command_phone(message: Message, state: FSMContext):
-    if message.contact:
-        phone = message.contact.phone_number
-    else:
-        phone = message.text
-    await state.update_data(phone=phone)
-    await state.set_state(Reg_point.username)
-    await message.answer(
-        "👍 Phone number saved!\n\n"
-        "Now I will automatically use your Telegram username.\n"
-        "➡️ Press any key or just continue...",
-    reply_markup=continue_button)
-
-@user_router.message(Reg_point.username)
-async def command_username(message: Message, state: FSMContext):
-    try:
-        username = message.from_user.username
-    except:
-        pass
-
-    await state.update_data(username=username)
-    await state.set_state(Reg_point.location)
-    await message.answer(GET_LOCATION_TEXT, reply_markup=location_share_kb)
+#Order Uchun Kerak 
+@user_router.message(F.text == "📝 Order")
+async def contact_handler(message:Message):
+    await message.answer(CONNACT_US_BT,reply_markup=order_kb)
 
 
 
-@user_router.message(Reg_point.location)
-async def command_location(message: Message, state: FSMContext):
-    if message.location is not None:
-        location = (message.location.latitude, message.location.longitude)
-    else:
-        location = message.text
-    await state.update_data(location=location)
-    data = await state.get_data()
-    
-    
-    await message.answer(
-            f"✅ *Registration completed!*\n\n"
-            f"🆔 Chat ID: `{data['chat_id']}`\n"
-            f"👤 Name: {data['name']}\n"
-            f"📱 Phone: {data['phone']}\n"
-            f"📛 Username: @{data['username']}\n"
-            f"📍 Location: {data['location']}",
-            parse_mode="Markdown",
-            reply_markup=ReplyKeyboardRemove()
-        )
-
-        
-    get_connect()
-    create_important_table()
-    insert_query(data['chat_id'],data['name'],data['phone'],data['username'],data['location'])
-
-    await state.clear()
-
-
-
-
-
-
-
-    
