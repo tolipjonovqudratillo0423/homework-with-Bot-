@@ -1,7 +1,10 @@
 from aiogram import Router, F
-from aiogram.types import Message
+from aiogram.types import Message,FSInputFile
+from aiogram.fsm.state import State ,StatesGroup
+from aiogram.fsm.context import FSMContext
 from details import *
 from database import *
+from search_func import *
 from environs import Env
 env = Env()
 env.read_env()  
@@ -14,15 +17,33 @@ async def contact_handler(message:Message):
 #Back da endi 
 @user_router.message(F.text == "↩️ Back")
 async def contact_handler(message:Message):
-    await message.answer(MENU_TEXT,reply_markup=menu_kb)\
+    path = "images/menu_image.jpg"
+
+    await message.answer_photo(photo = FSInputFile(path=path),caption=MENU_TEXT,reply_markup=menu_kb)
     
 #book uchun kerak
 @user_router.message(F.text == "📚 Books")
 async def contact_handler(message:Message):
     await message.answer(CONNACT_US_BT,reply_markup=books_kb)
+#search maydoni
+class SearchBook(StatesGroup):
+    search_type = State()
+    text = State()
+
+    
 @user_router.message(F.text == "🔎 Search")
 async def contact_handler(message:Message):
     await message.answer(CONNACT_US_BT,reply_markup=search_kb)
+@user_router.message(F.text=="🔎 Search by Titlte")
+async def search_books_by_title(message:Message):  
+    await message.answer(text="Iltimos kitob nomini kiriting: ")
+@user_router.message(F.text=="🔎 Search by Author")
+async def search_books_by_author(message:Message):
+    await message.answer(text="Iltimos muallif nomini kiriting: ")
+@user_router.message(F.text=="🔎 Search by Genre")
+async def search_books_by_genre(message:Message):
+    await message.answer(text="Iltimos genre nomini kiriting: ")
+
 
 #Profile Uchun Kerak
 @user_router.message(F.text == "👤 Profile")

@@ -17,7 +17,7 @@ def create_important_table():
     books_table = """
     create table if not exists books(
         id bigserial primary key,
-        title varchar(100) not null unique,
+        title varchar(100) not null,
         genre varchar(255) not null ,
         author varchar(100) not null,
         description text,
@@ -81,33 +81,70 @@ def get_user_data(chat_id):
             user = cursor.fetchall()
             connect.commit()
             return user
-def search_by_title(title):
-    search_sql="""
-    select * from books where title ilike '%%s%' """
-    with get_connect() as connect:
-        with connect.cursor() as cursor :
-            cursor.execute(search_sql,(title))
-            books = cursor.fetchall()
-            connect.commit()
-            return books 
-def search_by_genre(genre):
-    search_sql="""
+# def search_by_title(title):
+#     search_sql="""
+#     select * from books where title ilike '%%s%' """
+#     with get_connect() as connect:
+#         with connect.cursor() as cursor :
+#             cursor.execute(search_sql,(title))
+#             books = cursor.fetchall()
+#             connect.commit()
+#             return books 
+# def search_by_genre(genre):
+#     search_sql="""
+#     select * from books where genre ilike '%%s%'"""
+#     with get_connect() as connect:
+#         with connect.cursor() as cursor :
+#             cursor.execute(search_sql,(genre))
+#             books = cursor.fetchall()
+#             connect.commit()
+#             return books
+# def search_by_author(author):
+#     search_sql="""
+#     select * from books where author ilike '%%s%' """
+#     with get_connect() as connect:
+#         with connect.cursor() as cursor :
+#             cursor.execute(search_sql,(author))
+#             books = cursor.fetchall()
+#             connect.commit()
+#             return books
+
+def find_by_column(title=None,genre=None,author = None):
+    title_sql ="""
+    select * from books where title ilike '%%s%'"""
+    author_sql = """
+    select * from books where author ilike '%%s%'"""
+    genre_sql = """
     select * from books where genre ilike '%%s%'"""
-    with get_connect() as connect:
-        with connect.cursor() as cursor :
-            cursor.execute(search_sql,(genre))
-            books = cursor.fetchall()
-            connect.commit()
-            return books
-def search_by_author(author):
-    search_sql="""
-    select * from books where author ilike '%%s%' """
-    with get_connect() as connect:
-        with connect.cursor() as cursor :
-            cursor.execute(search_sql,(author))
-            books = cursor.fetchall()
-            connect.commit()
-            return books
+
+    if title:
+        try:
+            with get_connect() as connect:
+                with connect.cursor() as cursor :
+                    cursor.execute(title_sql,(title))
+                    return cursor.fetchall()
+                    
+        except:            
+            return None
+    elif author:
+        try:
+            with get_connect() as connect:
+                with connect.cursor() as cursor :
+                    cursor.execute(author_sql,(author))
+                    return cursor.fetchall()
+        except :        
+            return None
+    elif genre:
+        try:
+            with get_connect() as connect:
+                with connect.cursor() as cursor :
+                    cursor.execute(genre_sql,(genre))
+                    return cursor.fetchall()
+        except:      
+            return None
+    else:
+        return "Hech Qanday kitoblar TOPILMADI"
+
 
 
 

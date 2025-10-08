@@ -1,5 +1,5 @@
 from aiogram import Bot , Router, F
-from aiogram.types import Message, ReplyKeyboardRemove
+from aiogram.types import Message, ReplyKeyboardRemove,FSInputFile
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.filters import CommandStart
@@ -28,8 +28,11 @@ async def command_start(message: Message ):
 @register_router .message(F.text == "📝 Register")
 
 async def register(message:Message, state: FSMContext):
+    create_important_table()
+    path = "/home/tqm/Документы/Najot Talim/images/menu_image.jpg"
     if check_user(message.from_user.id):
-        await message.answer("You have already registered."+MENU_TEXT, reply_markup=menu_kb)
+        await message.answer_photo(photo = FSInputFile(path=path),caption="You have already registered.\n\n"+MENU_TEXT,reply_markup=menu_kb)
+        
     else:
         await state.set_state(Reg_point.name)
         await message.answer(GET_NAME_TEXT)
