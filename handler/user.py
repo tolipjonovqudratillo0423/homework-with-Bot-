@@ -42,7 +42,11 @@ async def search_books_by_title(message: Message, state: FSMContext):
 
 @user_router.message(Search.title)
 async def search_books_by_title_input(message: Message, state: FSMContext):
-    await message.answer(find_by_column(title=message.text))
+    result = "\n".join(find_by_column(title=message.text))
+    if result:
+        await message.answer(result)
+    else:
+        await message.answer("Hech narsa topilmadi !!")
     await state.clear()
 
 @user_router.message(F.text == "🔎 Search by Author")
@@ -52,7 +56,11 @@ async def search_books_by_author(message: Message, state: FSMContext):
 
 @user_router.message(Search.author)
 async def search_books_by_author_input(message: Message, state: FSMContext):
-    await message.answer(find_by_column(author=message.text))
+    result = "\n".join(find_by_column(author=message.text))
+    if result:
+        await message.answer(result)
+    else:
+        await message.answer("Hech narsa topilmadi !!")
     await state.clear()
 
 @user_router.message(F.text == "🔎 Search by Genre")
@@ -62,7 +70,11 @@ async def search_books_by_genre(message: Message, state: FSMContext):
 
 @user_router.message(Search.genre)
 async def search_books_by_genre_input(message: Message, state: FSMContext):
-    await message.answer(find_by_column(genre=message.text))
+    result = "\n".join(find_by_column(genre=message.text))
+    if result:
+        await message.answer(result)
+    else:
+        await message.answer("Hech narsa topilmadi !!")
     await state.clear()
 #Profile Uchun Kersak
 @user_router.message(F.text == "👤 Profile")

@@ -1,16 +1,11 @@
-import os
+import os 
 from aiogram import Bot, Dispatcher
 from aiogram .types import Message,ReplyKeyboardRemove
 from logging import basicConfig,INFO
 from handler import user_router,register_router
 import asyncio
-TOKEN = os.getenv('TOKEN')
+TOKEN = os.getenv("TOKEN")
 dp = Dispatcher()
-
-
-
-
-
 
 
 async def main():

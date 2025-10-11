@@ -46,6 +46,15 @@ def create_important_table():
     cursor.execute(orders_table)
     connect.commit()
     connect.close()
+def books_database ():
+    books = """
+
+"""
+    connect = get_connect()
+    cursor = connect.cursor()
+    cursor.execute(books)
+    connect.commit()
+    connect.close()
 
 
 def insert_query(chat_id, name, phone, username, location):
@@ -95,17 +104,26 @@ def find_by_column(title=None, genre=None, author=None):
     try:
         if title:
             cursor.execute(title_sql, (f"%{title}%",))
-            return cursor.fetchall()
+            
+            result = cursor.fetchall()
+
         elif author:
             cursor.execute(author_sql, (f"%{author}%",))
-            return cursor.fetchall()
+            result = cursor.fetchall()
         elif genre:
             cursor.execute(genre_sql, (f"%{genre}%",))
-            return cursor.fetchall()
+            result = cursor.fetchall()
         else:
-            return "Hech Qanday kitoblar TOPILMADI"
+            result = "Hech Qanday kitoblar TOPILMADI"
+        
+        end_result = []
+        for book in result:
+            end_result.append(book[1])
+        return end_result
     except Exception:
         return None
     finally:
         connect.close()
+create_important_table()
+
         
