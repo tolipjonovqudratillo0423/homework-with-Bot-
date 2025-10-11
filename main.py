@@ -1,11 +1,10 @@
-from environs import Env 
+import os
 from aiogram import Bot, Dispatcher
 from aiogram .types import Message,ReplyKeyboardRemove
 from logging import basicConfig,INFO
 from handler import user_router,register_router
 import asyncio
-env = Env()
-env.read_env()
+TOKEN = os.getenv('TOKEN')
 dp = Dispatcher()
 
 
@@ -15,7 +14,7 @@ dp = Dispatcher()
 
 
 async def main():
-    bot = Bot(token=str(env('TOKEN')))
+    bot = Bot(token=TOKEN)
     try:
         basicConfig(level=INFO)
         dp.include_router(register_router)

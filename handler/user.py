@@ -16,7 +16,7 @@ async def contact_handler(message:Message):
     await message.answer(CONNACT_US_BT,reply_markup=back_kb)
 #Back da endi 
 @user_router.message(F.text == "↩️ Back")
-async def contact_handler(message:Message):
+async def back_menu_handler(message:Message):
     path = "images/menu_image.jpg"
 
     await message.answer_photo(photo = FSInputFile(path=path),caption=MENU_TEXT,reply_markup=menu_kb)
@@ -24,28 +24,47 @@ async def contact_handler(message:Message):
 #book uchun kerak
 @user_router.message(F.text == "📚 Books")
 async def contact_handler(message:Message):
-    await message.answer(CONNACT_US_BT,reply_markup=books_kb)
+    await message.answer(MENU_TEXT,reply_markup=books_kb)
 #search maydoni
-class SearchBook(StatesGroup):
-    search_type = State()
-    text = State()
+class Search(StatesGroup):
+    title = State()
+    author = State()
+    genre = State()
 
-    
 @user_router.message(F.text == "🔎 Search")
-async def contact_handler(message:Message):
-    await message.answer(CONNACT_US_BT,reply_markup=search_kb)
-@user_router.message(F.text=="🔎 Search by Titlte")
-async def search_books_by_title(message:Message):  
-    await message.answer(text="Iltimos kitob nomini kiriting: ")
-@user_router.message(F.text=="🔎 Search by Author")
-async def search_books_by_author(message:Message):
-    await message.answer(text="Iltimos muallif nomini kiriting: ")
-@user_router.message(F.text=="🔎 Search by Genre")
-async def search_books_by_genre(message:Message):
-    await message.answer(text="Iltimos genre nomini kiriting: ")
+async def contact_handler(message: Message):
+    await message.answer("Qidiruv turini tanlang:", reply_markup=search_kb)
 
+@user_router.message(F.text == "🔎 Search by Title")
+async def search_books_by_title(message: Message, state: FSMContext):
+    await message.answer("Iltimos, kitob nomini kiriting:")
+    await state.set_state(Search.title)
 
-#Profile Uchun Kerak
+@user_router.message(Search.title)
+async def search_books_by_title_input(message: Message, state: FSMContext):
+    await message.answer(find_by_column(title=message.text))
+    await state.clear()
+
+@user_router.message(F.text == "🔎 Search by Author")
+async def search_books_by_author(message: Message, state: FSMContext):
+    await message.answer("Iltimos, muallif nomini kiriting:")
+    await state.set_state(Search.author)
+
+@user_router.message(Search.author)
+async def search_books_by_author_input(message: Message, state: FSMContext):
+    await message.answer(find_by_column(author=message.text))
+    await state.clear()
+
+@user_router.message(F.text == "🔎 Search by Genre")
+async def search_books_by_genre(message: Message, state: FSMContext):
+    await message.answer("Iltimos, janr nomini kiriting:")
+    await state.set_state(Search.genre)
+
+@user_router.message(Search.genre)
+async def search_books_by_genre_input(message: Message, state: FSMContext):
+    await message.answer(find_by_column(genre=message.text))
+    await state.clear()
+#Profile Uchun Kersak
 @user_router.message(F.text == "👤 Profile")
 async def contact_handler(message:Message):
     await message.answer(PROFILE,reply_markup=profile_kb)

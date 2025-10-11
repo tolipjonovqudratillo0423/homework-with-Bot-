@@ -78,7 +78,7 @@ order_kb = ReplyKeyboardMarkup(
 )
 search_kb = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text="🔎 Search by Titlte"), KeyboardButton(text="🔎 Search by Author")],
+        [KeyboardButton(text="🔎 Search by Title"), KeyboardButton(text="🔎 Search by Author")],
         [KeyboardButton(text="🔎 Search by Genre")],
         [KeyboardButton(text="↩️ Back")]
     ],
