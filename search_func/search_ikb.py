@@ -29,7 +29,7 @@ def get_page(page: int):
 async def search_handler(message: types.Message):
     page = 1
     items = get_page(page)
-    text = "\n".join(items)
+    text = "\n\n".join([f"📘 {item}" for item in items])
     markup = search_title(book_id=1, count=page)
     await message.answer(text, reply_markup=markup)
 
@@ -43,7 +43,7 @@ async def next_page(callback: types.CallbackQuery):
         await callback.answer("🚫 Bu oxirgi sahifa", show_alert=True)
         return
 
-    text = "\n".join(items)
+    text = "\n\n".join([f"📘 {item}" for item in items])
     markup = search_title(book_id, count=page)
     await callback.message.edit_text(text, reply_markup=markup)
     await callback.answer()
@@ -59,7 +59,7 @@ async def back_page(callback: types.CallbackQuery):
         return
 
     items = get_page(page)
-    text = "\n".join(items)
+    text = "\n\n".join([f"📘 {item}" for item in items])
     markup = search_title(book_id, count=page)
     await callback.message.edit_text(text, reply_markup=markup)
     await callback.answer()
