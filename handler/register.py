@@ -5,7 +5,9 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.filters import CommandStart
 from environs import Env
 from details import *
+from images_bot import *
 from database import *
+import os
 env = Env()
 env.read_env()
 
@@ -28,11 +30,14 @@ async def command_start(message: Message ):
 @register_router .message(F.text == "📝 Register")
 
 async def register(message:Message, state: FSMContext):
-    create_important_table()
-    path = "/home/tqm/Документы/Najot Talim/images/menu_image.jpg"
+    
+    
     if check_user(message.from_user.id):
-        await message.answer_photo(photo = FSInputFile(path=path),caption="You have already registered.\n\n"+MENU_TEXT,reply_markup=menu_kb)
-        
+        await message.answer_photo(
+    photo=MENU_IMAGE,
+    caption=MENU_TEXT,
+    reply_markup=menu_kb
+)
     else:
         await state.set_state(Reg_point.name)
         await message.answer(GET_NAME_TEXT)

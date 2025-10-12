@@ -33,9 +33,7 @@ async def search_handler(message: types.Message):
     markup = search_title(book_id=1, count=page)
     await message.answer(text, reply_markup=markup)
 
-# ————————————————————————————————
-# 5️⃣ NEXT tugmasi callback
-# ————————————————————————————————
+
 @search_router.callback_query(F.data.startswith("next_"))
 async def next_page(callback: types.CallbackQuery):
     _, book_id, page = callback.data.split("_")
@@ -51,9 +49,7 @@ async def next_page(callback: types.CallbackQuery):
     await callback.answer()
 
 
-# ————————————————————————————————
-# 6️⃣ BACK tugmasi callback
-# ————————————————————————————————
+
 @search_router.callback_query(F.data.startswith("back_"))
 async def back_page(callback: types.CallbackQuery):
     _, book_id, page = callback.data.split("_")

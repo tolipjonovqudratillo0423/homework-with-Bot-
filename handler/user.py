@@ -3,7 +3,8 @@ from aiogram.types import Message,FSInputFile
 from aiogram.fsm.state import State ,StatesGroup
 from aiogram.fsm.context import FSMContext
 from search_func import DATA, get_page, search_title
-
+import os
+from images_bot import MENU_IMAGE , SEARCH_IMAGE
 from details import *
 from database import *
 from search_func import *
@@ -19,10 +20,12 @@ async def contact_handler(message:Message):
 #Back da endi 
 @user_router.message(F.text == "↩️ Back")
 async def back_menu_handler(message:Message):
-    path = "images/menu_image.jpg"
-
-    await message.answer_photo(photo = FSInputFile(path=path),caption=MENU_TEXT,reply_markup=menu_kb)
     
+    await message.answer_photo(
+    photo=MENU_IMAGE,
+    caption=MENU_TEXT,
+    reply_markup=menu_kb
+)
 #book uchun kerak
 @user_router.message(F.text == "📚 Books")
 async def contact_handler(message:Message):
@@ -66,7 +69,7 @@ async def search_books_by_author(message: Message, state: FSMContext):
 
 @user_router.message(Search.author)
 async def search_books_by_author_input(message: Message, state: FSMContext):
-    result = "\n".join(find_by_column(author=message.text))
+    result = (find_by_column(author=message.text))
     if result:
         await message.answer(result)
     else:

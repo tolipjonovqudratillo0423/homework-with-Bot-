@@ -1,0 +1,2 @@
+MENU_IMAGE = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsmi93MSf9YdgjakEqUxp4pUWe6zzAH-TDzw&s"
+SEARCH_IMAGE = "https://thumbs.dreamstime.com/b/old-book-flying-letters-magic-light-background-bookshelf-library-ancient-books-as-symbol-knowledge-history-218640948.jpg"
