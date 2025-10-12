@@ -47,21 +47,24 @@ async def search_books_by_title(message: Message, state: FSMContext):
 
 @user_router.message(Search.title)
 async def search_books_by_title_input(message: Message, state: FSMContext):
-    books = "\n".join(find_by_column(title=message.text))
+    title = message.text.strip()
+    books = find_by_column(title=title)
+
     if not books:
-        await message.answer("Hech narsa topilmadi !!")
+        await message.answer("❌ Hech qanday natija topilmadi.")
         await state.clear()
         return
+
     DATA.clear()
     DATA.extend(books)
 
     page = 1
     items = get_page(page)
-    text = "\n".join(items)
-    markup = search_title(book_id=1,count=page)
-    await message.answer(text, reply_markup=markup)
-    await state.clear()
+    text = "\n\n".join([f"📘 {item}" for item in items])
+    markup = search_title(book_id=1, count=page)
 
+    await message.answer(f"🔎 Natijalar ({len(books)} ta topildi):\n\n{text}", reply_markup=markup)
+    await state.clear()
 @user_router.message(F.text == "🔎 Search by Author")
 async def search_books_by_author(message: Message, state: FSMContext):
     await message.answer("Iltimos, muallif nomini kiriting:")
@@ -69,25 +72,51 @@ async def search_books_by_author(message: Message, state: FSMContext):
 
 @user_router.message(Search.author)
 async def search_books_by_author_input(message: Message, state: FSMContext):
-    result = (find_by_column(author=message.text))
-    if result:
-        await message.answer(result)
-    else:
-        await message.answer("Hech narsa topilmadi !!")
+    author = message.text.strip()
+    books = find_by_column(author=author)
+
+    if not books:
+        await message.answer("❌ Hech qanday natija topilmadi.")
+        await state.clear()
+        return
+
+    DATA.clear()
+    DATA.extend(books)
+
+    page = 1
+    items = get_page(page)
+    text = "\n\n".join([f"👤 {item}" for item in items])
+    markup = search_title(book_id=1, count=page)
+
+    await message.answer(f"🔎 Muallif bo‘yicha natijalar ({len(books)} ta topildi):\n\n{text}", reply_markup=markup)
     await state.clear()
+
 
 @user_router.message(F.text == "🔎 Search by Genre")
 async def search_books_by_genre(message: Message, state: FSMContext):
     await message.answer("Iltimos, janr nomini kiriting:")
     await state.set_state(Search.genre)
 
+
 @user_router.message(Search.genre)
 async def search_books_by_genre_input(message: Message, state: FSMContext):
-    result = "\n".join(find_by_column(genre=message.text))
-    if result:
-        await message.answer(result)
-    else:
-        await message.answer("Hech narsa topilmadi !!")
+    genre = message.text.strip()
+    books = find_by_column(genre=genre)
+
+    if not books:
+        await message.answer("❌ Hech qanday natija topilmadi.")
+        await state.clear()
+        return
+
+    DATA.clear()
+    DATA.extend(books)
+
+    page = 1
+    items = get_page(page)
+    text = "\n\n".join([f"🎭 {item}" for item in items])
+    markup = search_title(book_id=1, count=page)
+
+    await message.answer(f"🔎 Janr bo‘yicha natijalar ({len(books)} ta topildi):\n\n{text}", reply_markup=markup)
     await state.clear()
 #Profile Uchun Kersak
 @user_router.message(F.text == "👤 Profile")
