@@ -86,7 +86,7 @@ async def command_username(message: Message, state: FSMContext):
 @register_router .message(Reg_point.location)
 async def command_location(message: Message, state: FSMContext):
     if message.location is not None:
-        location = (message.location.latitude, message.location.longitude)
+        location = f'{message.location.latitude}, {message.location.longitude}'
     else:
         location = message.text
     await state.update_data(location=location)

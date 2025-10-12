@@ -2,6 +2,8 @@ from aiogram import Router, F
 from aiogram.types import Message,FSInputFile
 from aiogram.fsm.state import State ,StatesGroup
 from aiogram.fsm.context import FSMContext
+from search_func import DATA, get_page, search_title
+
 from details import *
 from database import *
 from search_func import *
@@ -42,11 +44,19 @@ async def search_books_by_title(message: Message, state: FSMContext):
 
 @user_router.message(Search.title)
 async def search_books_by_title_input(message: Message, state: FSMContext):
-    result = "\n".join(find_by_column(title=message.text))
-    if result:
-        await message.answer(result)
-    else:
+    books = "\n".join(find_by_column(title=message.text))
+    if not books:
         await message.answer("Hech narsa topilmadi !!")
+        await state.clear()
+        return
+    DATA.clear()
+    DATA.extend(books)
+
+    page = 1
+    items = get_page(page)
+    text = "\n".join(items)
+    markup = search_title(book_id=1,count=page)
+    await message.answer(text, reply_markup=markup)
     await state.clear()
 
 @user_router.message(F.text == "🔎 Search by Author")

@@ -120,10 +120,9 @@ def find_by_column(title=None, genre=None, author=None):
         for book in result:
             end_result.append(book[1])
         return end_result
+    
     except Exception:
         return None
     finally:
         connect.close()
 create_important_table()
-
-        
