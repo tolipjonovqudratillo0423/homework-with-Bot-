@@ -25,6 +25,23 @@ def get_page(page: int):
     end = start + ITEMS_PER_PAGE
     return DATA[start:end]
 
+def select_buttons(book_id, page):
+    rows = []
+    buttons_per_row = 5
+
+    for i in range(1, 11):
+        btn = InlineKeyboardButton(
+            text=f"{i}",
+            callback_data=f"select_{book_id}_{page}_{i}"
+        )
+        if (i - 1) % buttons_per_row == 0:
+            rows.append([btn])
+        else:
+            rows[-1].append(btn)
+
+    return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
 @search_router.message(F.text == "🔎 Search")
 async def search_handler(message: types.Message):
     page = 1
@@ -33,10 +50,11 @@ async def search_handler(message: types.Message):
     markup = search_title(book_id=1, count=page)
     markup2 = select_buttons(book_id=1, page=page)
     full_markup = InlineKeyboardMarkup(
-    inline_keyboard=markup.inline_keyboard + markup2.inline_keyboard
-)
+        inline_keyboard=markup.inline_keyboard + markup2.inline_keyboard
+    )
+
     await message.answer(text, reply_markup=full_markup)
-    
+
 
 
 @search_router.callback_query(F.data.startswith("next_"))
@@ -49,11 +67,16 @@ async def next_page(callback: types.CallbackQuery):
         return
 
     text = "\n\n".join([f"📘 {item}" for item in items])
+
     markup = search_title(book_id, count=page)
-    await callback.message.edit_text(text, reply_markup=markup)
+    markup2 = select_buttons(book_id, page)
+
+    full_markup = InlineKeyboardMarkup(
+        inline_keyboard=markup.inline_keyboard + markup2.inline_keyboard
+    )
+
+    await callback.message.edit_text(text, reply_markup=full_markup)
     await callback.answer()
-
-
 
 @search_router.callback_query(F.data.startswith("back_"))
 async def back_page(callback: types.CallbackQuery):
@@ -65,28 +88,17 @@ async def back_page(callback: types.CallbackQuery):
 
     items = get_page(page)
     text = "\n\n".join([f"📘 {item}" for item in items])
+
     markup = search_title(book_id, count=page)
-    await callback.message.edit_text(text, reply_markup=markup)
+    markup2 = select_buttons(book_id, page)
+
+    full_markup = InlineKeyboardMarkup(
+        inline_keyboard=markup.inline_keyboard + markup2.inline_keyboard
+    )
+
+    await callback.message.edit_text(text, reply_markup=full_markup)
     await callback.answer()
 
-#1,2,3,4,5 buttons
-def select_buttons(book_id, page):
-    rows = []
-    buttons_per_row = 5  
-
-    for i in range(1, 11):
-        btn = InlineKeyboardButton(
-            text=f"{i}",  
-            callback_data=f"select_{book_id}_{page}_{i}"  
-        )
-
-        
-        if (i - 1) % buttons_per_row == 0:
-            rows.append([btn])
-        else:
-            rows[-1].append(btn)
-
-    return InlineKeyboardMarkup(inline_keyboard=rows)
 # @search_router.callback_query(F.data.startwith("select_"))
 # async def send_books(call:CallbackQuery):
 #     book_id = call.data
