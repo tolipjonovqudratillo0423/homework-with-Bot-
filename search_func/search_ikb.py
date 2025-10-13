@@ -33,8 +33,8 @@ async def search_handler(message: types.Message):
     markup = search_title(book_id=1, count=page)
     markup2 = select_buttons(book_id=1, page=page)
     full_markup = InlineKeyboardMarkup(
-        inline_keyboard=markup+ markup2
-    )
+    inline_keyboard=markup.inline_keyboard + markup2.inline_keyboard
+)
     await message.answer(text, reply_markup=full_markup)
     
 
