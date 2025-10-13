@@ -1,5 +1,5 @@
 from aiogram import Router, F, types
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton ,CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 search_router = Router()
@@ -31,7 +31,12 @@ async def search_handler(message: types.Message):
     items = get_page(page)
     text = "\n\n".join([f"📘 {item}" for item in items])
     markup = search_title(book_id=1, count=page)
-    await message.answer(text, reply_markup=markup)
+    markup2 = select_buttons(book_id=1, page=page)
+    full_markup = InlineKeyboardMarkup(
+        inline_keyboard=markup+ markup2
+    )
+    await message.answer(text, reply_markup=full_markup)
+    
 
 
 @search_router.callback_query(F.data.startswith("next_"))
@@ -63,3 +68,25 @@ async def back_page(callback: types.CallbackQuery):
     markup = search_title(book_id, count=page)
     await callback.message.edit_text(text, reply_markup=markup)
     await callback.answer()
+
+#1,2,3,4,5 buttons
+def select_buttons(book_id, page):
+    rows = []
+    buttons_per_row = 5  
+
+    for i in range(1, 11):
+        btn = InlineKeyboardButton(
+            text=f"{i}",  
+            callback_data=f"select_{book_id}_{page}_{i}"  
+        )
+
+        
+        if (i - 1) % buttons_per_row == 0:
+            rows.append([btn])
+        else:
+            rows[-1].append(btn)
+
+    return InlineKeyboardMarkup(inline_keyboard=rows)
+# @search_router.callback_query(F.data.startwith("select_"))
+# async def send_books(call:CallbackQuery):
+#     book_id = call.data
