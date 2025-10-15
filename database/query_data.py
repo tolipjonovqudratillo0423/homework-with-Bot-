@@ -1,7 +1,7 @@
 import sqlite3
 from .connect import get_connect
 
-
+#bu database.db ga kerakli table yasab beradi 
 def create_important_table():
     users_table = """
     CREATE TABLE IF NOT EXISTS users(
@@ -46,17 +46,9 @@ def create_important_table():
     cursor.execute(orders_table)
     connect.commit()
     connect.close()
-def books_database ():
-    books = """
-
-"""
-    connect = get_connect()
-    cursor = connect.cursor()
-    cursor.execute(books)
-    connect.commit()
-    connect.close()
 
 
+#bu query insert query bulib u userni database.db saqlaydi
 def insert_query(chat_id, name, phone, username, location):
     insert_sql = """
     INSERT INTO users(chat_id, name, phone, username, location)
@@ -72,7 +64,7 @@ def insert_query(chat_id, name, phone, username, location):
     connect.close()
     return user
 
-
+#bu query user registratsiya qilganmi tekshiradi agar malumot kelsa keyingi kod uni qilgan deydi agar none kelsa yoq
 def check_user(chat_id):
     check_sql = "SELECT * FROM users WHERE chat_id = ?;"
     connect = get_connect()
@@ -82,7 +74,7 @@ def check_user(chat_id):
     connect.close()
     return bool(user)
 
-
+#bu query bizga userni malumotini olib beradi (name phone username lovation ) profil uchun ishlamoqda 
 def get_user_data(chat_id):
     check_sql = "SELECT name, phone, username, location FROM users WHERE chat_id = ?;"
     connect = get_connect()
@@ -92,7 +84,7 @@ def get_user_data(chat_id):
     connect.close()
     return user
 
-
+#bu query title genre author buyicha malumot qidiradi uni BIZGA LIST QILIB ICHIDA KITOB NOMLARI BULIB KELADI 
 def find_by_column(title=None, genre=None, author=None):
     title_sql = "SELECT * FROM books WHERE LOWER(title) LIKE LOWER(?);"
     author_sql = "SELECT * FROM books WHERE LOWER(author) LIKE LOWER(?);"
@@ -125,4 +117,13 @@ def find_by_column(title=None, genre=None, author=None):
         return None
     finally:
         connect.close()
+
+
+#BU QUERY ORDERS TABLE GA DATA QUSHADI 
+def add_data_to_orders(book_id:int,user_id:int,quantity:int):
+    with get_connect() as db:
+        cursor = db.cursor()
+        cursor.execute("INSERT INTO orders (book_id,user_id,quantity) values (?,?,?)",(book_id,user_id,quantity))
+    db.commit()
+    return None
 create_important_table()

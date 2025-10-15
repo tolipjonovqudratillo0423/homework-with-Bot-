@@ -86,3 +86,9 @@ PROFILE = '''
     "Kerakli tugmani tanlang 👇"
 
 '''
+ORDERS_TEXT = (
+    "🛍️ *Sizning buyurtmalaringiz*\n\n"
+    "Quyida siz tanlagan va buyurtma bergan kitoblar ro‘yxati keltirilgan.\n"
+    "Har bir kitob bo‘yicha siz buyurtma bergan son ham ko‘rsatiladi.\n\n"
+    "📚 Buyurtmangizni tekshirib chiqing yoki yangi kitob tanlash uchun 🔎 *Search* tugmasini bosing."
+)

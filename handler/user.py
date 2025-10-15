@@ -13,11 +13,13 @@ env = Env()
 env.read_env()  
 
 user_router = Router()
-#Contact uchun kerak 
+#BU CONNTACT BUUTON FUNCTIONIGA JAVOB BERADI NO RETURN
 @user_router.message(F.text == "📞 Contact")
 async def contact_handler(message:Message):
     await message.answer(CONNACT_US_BT,reply_markup=back_kb)
-#Back da endi 
+
+
+#BACK BUTTON FUNCTION
 @user_router.message(F.text == "↩️ Back")
 async def back_menu_handler(message:Message):
     
@@ -26,41 +28,60 @@ async def back_menu_handler(message:Message):
     caption=MENU_TEXT,
     reply_markup=menu_kb
 )
-#book uchun kerak
+
+
+#BOOK FEILD
 @user_router.message(F.text == "📚 Books")
 async def contact_handler(message:Message):
     await message.answer(MENU_TEXT,reply_markup=books_kb)
-#search maydoni
+
+
+#SEARCH FEILD
+
+
+
+#class for saving message text and what type is it title author genre like this
 class Search(StatesGroup):
     title = State()
     author = State()
     genre = State()
 
+
+
+#the function of the button SEARCH 
 @user_router.message(F.text == "🔎 Search")
 async def contact_handler(message: Message):
     await message.answer("Qidiruv turini tanlang:", reply_markup=search_kb)
 
+
+#START OF SEARCH PROGRESS!!!
+#the start search on title including State , setting state.text
 @user_router.message(F.text == "🔎 Search by Title")
 async def search_books_by_title(message: Message, state: FSMContext):
     await message.answer("Iltimos, kitob nomini kiriting:")
+    #setting
     await state.set_state(Search.title)
 
+
+#savine to state.title , with checking and giving result
 @user_router.message(Search.title)
 async def search_books_by_title_input(message: Message, state: FSMContext):
     title = message.text.strip()
-    books = find_by_column(title=title)
 
-    if not books:
+    books = find_by_column(title=title)#bu query title genre author buyicha malumot qidiradi uni BIZGA LIST QILIB ICHIDA NOMLARI BULIB KELADI 
+
+
+    if not books:#FIND BY COLUMN CANT FIND BOOK
         await message.answer("❌ Hech qanday natija topilmadi.")
         await state.clear()
         return
 
-    DATA.clear()
-    DATA.extend(books)
-
+    DATA.clear()#IF DATA HAD DATA CLEAR ERASE IT
+    DATA.extend(books)#ADDING BOOKS TO DATA 
     page = 1
+    
     items = get_page(page)
-    text = "\n\n".join([f"📘 {item}" for item in items])
+    text = "\n".join([f"{i+1}. {item}" for i, item in enumerate(items)])
     markup = search_title(book_id=1, count=page)
 
     await message.answer(f"🔎 Natijalar ({len(books)} ta topildi):\n\n{text}", reply_markup=markup)
@@ -83,7 +104,7 @@ async def search_books_by_author_input(message: Message, state: FSMContext):
     DATA.clear()
     DATA.extend(books)
 
-    page = 1
+    page = 1 
     items = get_page(page)
     text = "\n\n".join([f"👤 {item}" for item in items])
     markup = search_title(book_id=1, count=page)
@@ -153,7 +174,7 @@ async def contact_handler(message:Message):
 #Order Uchun Kerak 
 @user_router.message(F.text == "📝 Order")
 async def contact_handler(message:Message):
-    await message.answer(CONNACT_US_BT,reply_markup=order_kb)
+    await message.answer(ORDERS_TEXT,reply_markup=order_kb)
     
 @user_router.message(F.text == "🛒 Ordered Books")
 async def contact_handler(message:Message):

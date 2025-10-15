@@ -5,6 +5,7 @@ __pycache__/
 *.pyd
 *.so
 
+main_in_local.py
 # Virtual environment
 .venv/
 venv/
