@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.types import Message,FSInputFile
+from aiogram.types import Message,FSInputFile,ReplyKeyboardRemove
 from aiogram.fsm.state import State ,StatesGroup
 from aiogram.fsm.context import FSMContext
 from search_func import DATA, get_page, search_title
@@ -178,7 +178,7 @@ async def contact_handler(message:Message):
     
 @user_router.message(F.text == "🛒 Ordered Books")
 async def contact_handler(message:Message):
-    await message.answer(CONNACT_US_BT,reply_markup=order_inb)
+    await message.answer(CONNACT_US_BT,reply_markup=ReplyKeyboardRemove())
 
 
 
